@@ -8,19 +8,19 @@
     "net6.0": []
   },
   "packageFolders": {
-    "C:\\Users\\Minhtuann\\.nuget\\packages\\": {}
+    "C:\\Users\\ADMIN\\.nuget\\packages\\": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "E:\\FALL2023\\PRN231\\Project\\SE1623_Group3_Project_HotelManagement\\Hotel_Management_Client\\Hotel_Management_Client.csproj",
+      "projectUniqueName": "F:\\Ky8\\PRN231\\PRN_Project\\SE1623_Group3_Project_HotelManagement\\Hotel_Management_Client\\Hotel_Management_Client.csproj",
       "projectName": "Hotel_Management_Client",
-      "projectPath": "E:\\FALL2023\\PRN231\\Project\\SE1623_Group3_Project_HotelManagement\\Hotel_Management_Client\\Hotel_Management_Client.csproj",
-      "packagesPath": "C:\\Users\\Minhtuann\\.nuget\\packages\\",
-      "outputPath": "E:\\FALL2023\\PRN231\\Project\\SE1623_Group3_Project_HotelManagement\\Hotel_Management_Client\\obj\\",
+      "projectPath": "F:\\Ky8\\PRN231\\PRN_Project\\SE1623_Group3_Project_HotelManagement\\Hotel_Management_Client\\Hotel_Management_Client.csproj",
+      "packagesPath": "C:\\Users\\ADMIN\\.nuget\\packages\\",
+      "outputPath": "F:\\Ky8\\PRN231\\PRN_Project\\SE1623_Group3_Project_HotelManagement\\Hotel_Management_Client\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
-        "C:\\Users\\Minhtuann\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Users\\ADMIN\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
@@ -28,7 +28,7 @@
       ],
       "sources": {
         "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
-        "C:\\Program Files\\dotnet\\sdk\\7.0.306\\Sdks\\Microsoft.NET.Sdk.Web\\library-packs": {},
+        "C:\\Program Files\\dotnet\\sdk\\7.0.302\\Sdks\\Microsoft.NET.Sdk.Web\\library-packs": {},
         "https://api.nuget.org/v3/index.json": {}
       },
       "frameworks": {
@@ -65,7 +65,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.306\\RuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.302\\RuntimeIdentifierGraph.json"
       }
     }
   }
