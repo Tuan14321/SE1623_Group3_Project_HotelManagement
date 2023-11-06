@@ -119,5 +119,6 @@ namespace Hotel_Management_API.Controllers
         {
             return (_context.Rooms?.Any(e => e.RoomId == id)).GetValueOrDefault();
         }
+        //test git chuc @alo
     }
 }
