@@ -1,11 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
+﻿using Hotel_Management_API.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Hotel_Management_API.Models;
 
 namespace Hotel_Management_API.Controllers
 {
@@ -24,10 +19,10 @@ namespace Hotel_Management_API.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Payment>>> GetPayments()
         {
-          if (_context.Payments == null)
-          {
-              return NotFound();
-          }
+            if (_context.Payments == null)
+            {
+                return NotFound();
+            }
             return await _context.Payments.ToListAsync();
         }
 
@@ -35,10 +30,10 @@ namespace Hotel_Management_API.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<Payment>> GetPayment(int id)
         {
-          if (_context.Payments == null)
-          {
-              return NotFound();
-          }
+            if (_context.Payments == null)
+            {
+                return NotFound();
+            }
             var payment = await _context.Payments.FindAsync(id);
 
             if (payment == null)
@@ -85,10 +80,10 @@ namespace Hotel_Management_API.Controllers
         [HttpPost]
         public async Task<ActionResult<Payment>> PostPayment(Payment payment)
         {
-          if (_context.Payments == null)
-          {
-              return Problem("Entity set 'DataHotelContext.Payments'  is null.");
-          }
+            if (_context.Payments == null)
+            {
+                return Problem("Entity set 'DataHotelContext.Payments'  is null.");
+            }
             _context.Payments.Add(payment);
             await _context.SaveChangesAsync();
 
@@ -119,5 +114,46 @@ namespace Hotel_Management_API.Controllers
         {
             return (_context.Payments?.Any(e => e.PaymentId == id)).GetValueOrDefault();
         }
+        [HttpPost("pay/{invoiceId}")]
+        public async Task<IActionResult> MakePayment(int invoiceId, [FromBody] Payment paymentRequest)
+        {
+            var invoice = await _context.Invoices.FindAsync(invoiceId);
+
+            if (invoice == null)
+            {
+                return NotFound("Hóa đơn không tồn tại.");
+            }
+
+            // Tính tổng tiền từ hóa đơn
+            double totalPrice = (double)CalculateTotalPrice(invoice);
+
+            // Kiểm tra xem tổng tiền thanh toán từ người dùng có khớp với tổng tiền từ hóa đơn
+            if (totalPrice != paymentRequest.Amount)
+            {
+                return BadRequest("Số tiền thanh toán không khớp với tổng tiền hóa đơn.");
+            }
+
+            // Tạo đối tượng Payment
+            var payment = new Payment
+            {
+                InvoiceId = invoice.InvoiceId,
+                Amount = paymentRequest.Amount,
+                PaymentDate = DateTime.Now,  // Thời gian thanh toán
+                PaymentMethod = paymentRequest.PaymentMethod  // Phương thức thanh toán từ người dùng
+            };
+
+            // Lưu đối tượng Payment vào cơ sở dữ liệu
+            _context.Payments.Add(payment);
+            await _context.SaveChangesAsync();
+
+            return Ok("Thanh toán thành công.");
+        }
+
+        private decimal CalculateTotalPrice(Invoice invoice)
+        {
+            // Điều này giả định rằng bạn đã tính toán tổng tiền theo logic của bạn, ví dụ: phí phòng, phí dịch vụ, v.v.
+            return (decimal)invoice.TotalPrice;
+        }
+
     }
 }

@@ -114,7 +114,7 @@ namespace Hotel_Management_API.Models
             {
                 entity.ToTable("Room");
 
-                entity.Property(e => e.RoomName).HasMaxLength(50);
+                // entity.Property(e => e.RoomName).HasMaxLength(50);
 
                 entity.HasOne(d => d.Floor)
                     .WithMany(p => p.Rooms)

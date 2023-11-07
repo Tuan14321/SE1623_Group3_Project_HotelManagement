@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace Hotel_Management_API.Models
+﻿namespace Hotel_Management_API.Models
 {
     public partial class Room
     {
@@ -11,7 +8,7 @@ namespace Hotel_Management_API.Models
         }
 
         public int RoomId { get; set; }
-        public string? RoomName { get; set; }
+        //public string? RoomName { get; set; }
         public int TypeId { get; set; }
         public int? StatusId { get; set; }
         public int? FloorId { get; set; }

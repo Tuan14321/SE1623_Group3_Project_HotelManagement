@@ -1,11 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
+﻿using Hotel_Management_API.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Hotel_Management_API.Models;
 
 namespace Hotel_Management_API.Controllers
 {
@@ -24,29 +19,68 @@ namespace Hotel_Management_API.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Invoice>>> GetInvoices()
         {
-          if (_context.Invoices == null)
-          {
-              return NotFound();
-          }
+            if (_context.Invoices == null)
+            {
+                return NotFound();
+            }
             return await _context.Invoices.ToListAsync();
         }
 
         // GET: api/Invoices/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Invoice>> GetInvoice(int id)
+        public IActionResult GetInvoiceById(int id)
         {
-          if (_context.Invoices == null)
-          {
-              return NotFound();
-          }
-            var invoice = await _context.Invoices.FindAsync(id);
-
-            if (invoice == null)
+            if (_context.Invoices == null)
             {
                 return NotFound();
             }
+            List<Invoice> invoice = _context.Invoices.Where(i => i.InvoiceId == id)
+                                                     .Include(c => c.Customer)
+                                                     .Include(u => u.User)
+                                                     .Include(s => s.Services)
+                                                     .Include(i => i.Room)
+                                                        .ThenInclude(r => r.Type)
+                                                     .Include(i => i.Room)
+                                                        .ThenInclude(r => r.Status)
+                                                     .Include(i => i.Room)
+                                                        .ThenInclude(r => r.Floor)
+                                                     .ToList();
+            if (invoice == null)
+            {
+                return NotFound("Ko có");
+            }
 
-            return invoice;
+            List<InvoiceDTO> invoicesDTO = new List<InvoiceDTO>();
+
+            if (!invoicesDTO.Any())
+            {
+                invoicesDTO = new List<InvoiceDTO>();
+            }
+            foreach (var item in invoice)
+            {
+                InvoiceDTO invoices = new InvoiceDTO();
+                invoices.InvoiceId = item.InvoiceId;
+                if (item.Room != null)
+                {
+                    invoices.TypeName = item.Room.Type.Name;
+                    invoices.Status = item.Room.Status.StatusName;
+                    invoices.Floor = item.Room.Floor.FloorName;
+                }
+                invoices.CustomerName = item.Customer.LastName;
+                invoices.UserName = item.User.UserName;
+                invoices.CheckInTime = item.CheckInTime;
+                invoices.CheckOutTime = item.CheckOutTime;
+                if (((TimeSpan)(item.CheckOutTime - item.CheckInTime)).TotalHours <= 24)
+                {
+                    invoices.TotalPrice = (item.Room.Type.PricePerHour * (((TimeSpan)(item.CheckOutTime - item.CheckInTime)).TotalHours)) + item.Services.Sum(s => s.Price);
+                }
+                else
+                {
+                    invoices.TotalPrice = (item.Room.Type.PricePerHour * (((TimeSpan)(item.CheckOutTime - item.CheckInTime)).TotalHours)) + item.Services.Sum(s => s.Price);
+                }
+                invoicesDTO.Add(invoices);
+            }
+            return Ok(invoicesDTO);
         }
 
         // PUT: api/Invoices/5
@@ -85,10 +119,10 @@ namespace Hotel_Management_API.Controllers
         [HttpPost]
         public async Task<ActionResult<Invoice>> PostInvoice(Invoice invoice)
         {
-          if (_context.Invoices == null)
-          {
-              return Problem("Entity set 'DataHotelContext.Invoices'  is null.");
-          }
+            if (_context.Invoices == null)
+            {
+                return Problem("Entity set 'DataHotelContext.Invoices'  is null.");
+            }
             _context.Invoices.Add(invoice);
             await _context.SaveChangesAsync();
 

@@ -15,6 +15,8 @@ var connectionString = builder.Configuration.GetConnectionString("DefaultConnect
 builder.Services.AddDbContext<DataHotelContext>(options =>
     options.UseSqlServer(connectionString));
 
+var AuthenSettings = builder.Configuration.GetSection("AuthenticationSettings").Get<Authentication>();
+builder.Services.AddSingleton(AuthenSettings);
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
