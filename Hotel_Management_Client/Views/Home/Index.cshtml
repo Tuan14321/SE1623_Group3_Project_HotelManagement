@@ -1,8 +1,52 @@
-﻿@{
+﻿@using Hotel_Management_API.Models;
+@{
     ViewData["Title"] = "Home Page";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<div class="container h-100 my-4">
+    <div id="floors-container"></div>
 </div>
+
+<script>
+    // Previous AJAX code to fetch data here
+    $(document).ready(function () {
+        // Your jQuery code here
+
+        // Inside the AJAX success callback function
+        $.get("https://localhost:7083/api/Floors", function (floors) {
+            var floorsContainer = $("#floors-container");
+            $.each(floors, function (index, floor) {
+                // Create elements and append data
+                var floorDiv = $("<div>").addClass("d-flex mb-3");
+                var floorNameDiv = $("<div>").addClass("floor bg-dark text-lg-center text-white").text(floor.floorName);
+                floorDiv.append(floorNameDiv);
+
+                // Fetch rooms for the current floor
+                $.get("https://localhost:7083/api/Rooms/ByFloor/" + floor.floorId, function (rooms) {
+                    var roomButtonGroup = $("<div>").addClass("btn-group dropend");
+                    $.each(rooms, function (index, room) {
+                        var roomButton = $("<button>").addClass("room btn-" + "Status" + room.statusId + " room text-lg-center text-white ms-2 rounded-3");
+                        roomButton.attr("data-toggle", "dropdown");
+                        roomButton.attr("aria-expanded", "false");
+                        var roomNameSpan = $("<span>").text("Room: " + room.roomName);
+                        roomButton.append(roomNameSpan);
+
+                        // Add more elements and functionality as needed
+
+                        roomButtonGroup.append(roomButton);
+                    });
+
+                    // Append the roomButtonGroup to the floorDiv
+                    floorDiv.append(roomButtonGroup);
+
+                    // Append the floorDiv to the floorsContainer
+                    floorsContainer.append(floorDiv);
+                });
+            });
+        });
+    });
+</script>
+
+
+
