@@ -1,0 +1,10 @@
+{
+  "version": 2,
+  "dgSpecHash": "gXGAnvsmfIBJEsQALgSTOXDxrUNcUOjjpaY5cV55RMZb0anY5yQh6dpnfWYgWaSMb4XeHCj1bs7VnlLk4pMyXA==",
+  "success": true,
+  "projectFilePath": "C:\\Users\\Lenovo\\Documents\\SE1623_Group3_Project_HotelManagement\\Hotel_Management_Client\\Hotel_Management_Client.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\Lenovo\\.nuget\\packages\\newtonsoft.json\\13.0.3\\newtonsoft.json.13.0.3.nupkg.sha512"
+  ],
+  "logs": []
+}
