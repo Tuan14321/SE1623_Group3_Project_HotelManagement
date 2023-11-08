@@ -19,8 +19,8 @@ namespace Hotel_Management_Client.Controllers
         [HttpGet]
         public async Task<IActionResult> Index()
         {
-            /*// Fetch the list of floors from the API
-            HttpResponseMessage floorsResponse = await _client.GetAsync("https://your-api-url/api/Floors");
+            // Fetch the list of floors from the API
+            HttpResponseMessage floorsResponse = await _client.GetAsync("https://localhost:7083/api/Floors");
 
             if (floorsResponse.IsSuccessStatusCode)
             {
@@ -30,7 +30,7 @@ namespace Hotel_Management_Client.Controllers
                 // Fetch the list of rooms for each floor
                 foreach (var floor in floors)
                 {
-                    HttpResponseMessage roomsResponse = await _client.GetAsync($"https://your-api-url/api/RoomsByFloor/{floor.FloorId}");
+                    HttpResponseMessage roomsResponse = await _client.GetAsync($"https://localhost:7083/api/Rooms/ByFloor/{floor.FloorId}");
                     if (roomsResponse.IsSuccessStatusCode)
                     {
                         var roomsJson = await roomsResponse.Content.ReadAsStringAsync();
@@ -42,8 +42,8 @@ namespace Hotel_Management_Client.Controllers
             }
 
             // Handle the case where the API request was not successful
-            return View("Error");*/
-            return View();
+            return View("Error");
+            
         }
 
         public IActionResult Privacy()
