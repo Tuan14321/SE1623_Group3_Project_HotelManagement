@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Hotel_Management_API.Models;
+using Hotel_Management_API.DTO;
 
 namespace Hotel_Management_API.Controllers
 {
@@ -20,46 +21,105 @@ namespace Hotel_Management_API.Controllers
             _context = context;
         }
 
-        // GET: api/Rooms
-        [HttpGet]
-        public async Task<ActionResult<IEnumerable<Room>>> GetRooms()
+        [HttpGet("GetRoom")]
+        public IActionResult GetRooms()
         {
-          if (_context.Rooms == null)
-          {
-              return NotFound();
-          }
-            return await _context.Rooms.ToListAsync();
+            var rooms = _context.Rooms
+                .Include(x => x.Type)
+                .Include(x => x.Floor)
+                .Include(x => x.Status)
+                .ToList();
+
+            // Ánh xạ các phòng và các thuộc tính liên quan vào một danh sách mới
+            var roomList = rooms.Select(room => new RoomDTO
+            {
+                RoomId = room.RoomId,
+                RoomName = room.RoomName,
+                TypeName = room.Type?.Name,
+                StatusName = room.Status?.StatusName,
+                FloorName = room.Floor?.FloorName
+            }).ToList();
+
+            return Ok(roomList);
         }
 
         // GET: api/Rooms/5
-        [HttpGet("{id}")]
-        public async Task<ActionResult<Room>> GetRoom(int id)
+        [HttpGet("GetRoom/{id}")]
+        public async Task<IActionResult> GetRoom(int id)
         {
-          if (_context.Rooms == null)
-          {
-              return NotFound();
-          }
-            var room = await _context.Rooms.FindAsync(id);
+            var room = await _context.Rooms
+                .Include(x => x.Type)
+                .Include(x => x.Floor)
+                .Include(x => x.Status)
+                .FirstOrDefaultAsync(r => r.RoomId == id);
 
             if (room == null)
             {
                 return NotFound();
             }
 
-            return room;
+            //var roomInfo = new RoomDTO
+            //{
+            //    RoomId = room.RoomId,
+            //    RoomName = room.RoomName,
+            //    TypeId = room.Type.Name,
+            //    StatusId = room.Status.StatusName,
+            //    FloorId = room.Floor.FloorName
+            //};
+            var roomDTO = new RoomDTO
+            {
+                RoomId = room.RoomId,
+                RoomName = room.RoomName,
+                TypeName = room.Type?.Name,
+                StatusName = room.Status?.StatusName,
+                FloorName = room.Floor?.FloorName
+            };
+
+            return Ok(roomDTO);
+
+            
+        }
+
+        // POST: api/Rooms
+        [HttpPost("Create")]
+        public async Task<IActionResult> CreateRoom([FromBody] RoomDTORequest room)
+        {
+            
+
+            _context.Rooms.Add(new Room
+            {
+                RoomId = room.RoomId,
+                RoomName = room.RoomName,
+                TypeId = room.TypeId,
+                StatusId = room.StatusId,
+                FloorId = room.FloorId
+
+            });
+            await _context.SaveChangesAsync();
+
+            return CreatedAtAction("GetRoom", new { id = room.RoomId }, room);
         }
 
         // PUT: api/Rooms/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutRoom(int id, Room room)
+        [HttpPut("Update/{id}")]
+        public async Task<IActionResult> UpdateRoom(int id, [FromBody] RoomDTORequest room)
         {
-            if (id != room.RoomId)
+            
+
+            var existingRoom = await _context.Rooms.FindAsync(id);
+
+            if (existingRoom == null)
             {
-                return BadRequest();
+                return NotFound();
             }
 
-            _context.Entry(room).State = EntityState.Modified;
+            // Cập nhật thuộc tính của phòng từ room
+            existingRoom.RoomName = room.RoomName;
+            existingRoom.TypeId = room.TypeId;
+            existingRoom.StatusId = room.StatusId;
+            existingRoom.FloorId = room.FloorId;
+
+            _context.Entry(existingRoom).State = EntityState.Modified;
 
             try
             {
@@ -80,29 +140,10 @@ namespace Hotel_Management_API.Controllers
             return NoContent();
         }
 
-        // POST: api/Rooms
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPost]
-        public async Task<ActionResult<Room>> PostRoom(Room room)
-        {
-          if (_context.Rooms == null)
-          {
-              return Problem("Entity set 'DataHotelContext.Rooms'  is null.");
-          }
-            _context.Rooms.Add(room);
-            await _context.SaveChangesAsync();
-
-            return CreatedAtAction("GetRoom", new { id = room.RoomId }, room);
-        }
-
         // DELETE: api/Rooms/5
-        [HttpDelete("{id}")]
+        [HttpDelete("Delete/{id}")]
         public async Task<IActionResult> DeleteRoom(int id)
         {
-            if (_context.Rooms == null)
-            {
-                return NotFound();
-            }
             var room = await _context.Rooms.FindAsync(id);
             if (room == null)
             {
@@ -117,8 +158,7 @@ namespace Hotel_Management_API.Controllers
 
         private bool RoomExists(int id)
         {
-            return (_context.Rooms?.Any(e => e.RoomId == id)).GetValueOrDefault();
+            return _context.Rooms.Any(e => e.RoomId == id);
         }
-        //test git chuc @alo
     }
 }

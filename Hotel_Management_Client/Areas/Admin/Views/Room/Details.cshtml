@@ -1,0 +1,29 @@
+﻿@model Hotel_Management_API.DTO.RoomDTO
+
+<div>
+    <h2>Room Information</h2>
+    <hr />
+    <table class="table">
+        <tr>
+            <td>Room Name:</td>
+            <td>@Model.RoomName</td>
+        </tr>
+        <tr>
+            <td>Type:</td>
+            <td>@ViewBag.TypeName</td>
+        </tr>
+        <tr>
+            <td>Floor:</td>
+            <td>@ViewBag.FloorName</td>
+        </tr>
+        <tr>
+            <td>Status:</td>
+            <td>@ViewBag.StatusName</td>
+        </tr>
+    </table>
+</div>
+<div>
+    @*<a asp-action="Index">Back to Room List</a>*@
+    <a href="/Admin/Room/Index">Back to Room List</a>
+
+</div>

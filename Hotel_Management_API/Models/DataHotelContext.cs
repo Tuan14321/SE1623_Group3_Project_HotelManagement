@@ -1,4 +1,7 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using System;
+using System.Collections.Generic;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata;
 
 namespace Hotel_Management_API.Models
 {
@@ -28,11 +31,8 @@ namespace Hotel_Management_API.Models
         {
             if (!optionsBuilder.IsConfigured)
             {
-                var builder = new ConfigurationBuilder()
-                                              .SetBasePath(Directory.GetCurrentDirectory())
-                                              .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true);
-                IConfigurationRoot configuration = builder.Build();
-                optionsBuilder.UseSqlServer(configuration.GetConnectionString("DefaultConnection"));
+#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
+                optionsBuilder.UseSqlServer("server=CHUCHC;database=DataHotel;Integrated Security=True;TrustServerCertificate=True");
             }
         }
 
@@ -71,19 +71,16 @@ namespace Hotel_Management_API.Models
                 entity.HasOne(d => d.Customer)
                     .WithMany(p => p.Invoices)
                     .HasForeignKey(d => d.CustomerId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_Invoice_Customers");
 
                 entity.HasOne(d => d.Room)
                     .WithMany(p => p.Invoices)
                     .HasForeignKey(d => d.RoomId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_Invoice_Room");
 
                 entity.HasOne(d => d.User)
                     .WithMany(p => p.Invoices)
                     .HasForeignKey(d => d.UserId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_Invoice_User");
             });
 
@@ -129,7 +126,6 @@ namespace Hotel_Management_API.Models
                 entity.HasOne(d => d.Type)
                     .WithMany(p => p.Rooms)
                     .HasForeignKey(d => d.TypeId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_Room_RoomType");
             });
 
