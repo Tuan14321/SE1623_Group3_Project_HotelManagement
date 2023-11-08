@@ -1,53 +1,56 @@
-﻿@using Hotel_Management_API.Models;
-
+﻿
 @{
     ViewData["Title"] = "Home Page";
 }
-
+@model List<HomeViewModel.FloorViewModel> 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
 <div class="container h-100 my-4">
-    <div id="floors-container"></div>
+    @foreach (var floor in Model)
+    {
+        <div class="d-flex mb-3">
+            <div class="floor bg-dark text-lg-center text-white">
+                @floor.FloorName
+            </div>
+            <div class="btn-group dropend">
+                @if (floor.Rooms != null && floor.Rooms.Count > 0)
+                {
+                    <ul>
+                        @foreach (var room in floor.Rooms)
+                        {
+                            <button class="room btn btn-success room text-lg-center text-white ms-2 rounded-3" data-bs-toggle="dropdown" aria-expanded="false">
+                                <span>
+                                    Room:  @room.RoomName
+                                </span>
+                                <div class="rounded-1">
+                                    @if (room.StatusId == 2) // Kiểm tra nếu trạng thái là 2
+                                    {
+                                        <span class="time">Start Time: </span>
 
+                                        <br />
+                                        ///<span id="clock">Time: </span>
+                                    }
+                                </div>
+                                <div>
+                                    @if (room.StatusId == 2) // Kiểm tra nếu trạng thái là 2
+                                    {
+                                        <span class="customer-name"></span>
+                                        // Hiển thị tên khách hàng
+                                    }
+                                    else
+                                    {
+                                        <span></span>
+                                    }
+                                </div>
+                            </button>
+                        }
+                    </ul>
+                }
+            </div>
+        </div>
+    }
+ </div>
 
-<script>
-    // Previous AJAX code to fetch data here
-    $(document).ready(function () {
-        // Your jQuery code here
-
-        // Inside the AJAX success callback function
-        $.get("https://localhost:7083/api/Floors", function (floors) {
-            var floorsContainer = $("#floors-container");
-            $.each(floors, function (index, floor) {
-                // Create elements and append data
-                var floorDiv = $("<div>").addClass("d-flex mb-3");
-                var floorNameDiv = $("<div>").addClass("floor bg-dark text-lg-center text-white").text(floor.floorName);
-                floorDiv.append(floorNameDiv);
-
-                // Fetch rooms for the current floor
-                $.get("https://localhost:7083/api/Rooms/ByFloor/" + floor.floorId, function (rooms) {
-                    var roomButtonGroup = $("<div>").addClass("btn-group dropend");
-                    $.each(rooms, function (index, room) {
-                        var roomButton = $("<button>").addClass("room btn-" + "Status" + room.statusId + " room text-lg-center text-white ms-2 rounded-3");
-                        roomButton.attr("data-toggle", "dropdown");
-                        roomButton.attr("aria-expanded", "false");
-                        var roomNameSpan = $("<span>").text("Room: " + room.roomName);
-                        roomButton.append(roomNameSpan);
-
-                        // Add more elements and functionality as needed
-
-                        roomButtonGroup.append(roomButton);
-                    });
-
-                    // Append the roomButtonGroup to the floorDiv
-                    floorDiv.append(roomButtonGroup);
-
-                    // Append the floorDiv to the floorsContainer
-                    floorsContainer.append(floorDiv);
-                });
-            });
-        });
-    });
-</script>
-
+ 
 
 

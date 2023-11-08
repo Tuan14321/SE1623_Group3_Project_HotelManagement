@@ -13,7 +13,9 @@
         {
             public int RoomId { get; set; }
             public string RoomName { get; set; }
+            public int? StatusId { get; set; }
             // Add more room properties as needed
         }
+
     }
 }
