@@ -119,5 +119,30 @@ namespace Hotel_Management_API.Controllers
         {
             return (_context.Rooms?.Any(e => e.RoomId == id)).GetValueOrDefault();
         }
+
+        // GET: api/Rooms/ByFloor/{floorId}
+        [HttpGet("ByFloor/{floorId}")]
+        public async Task<ActionResult<IEnumerable<Room>>> GetRoomsByFloor(int floorId)
+        {
+            try
+            {
+                var rooms = await _context.Rooms
+                    .Where(room => room.FloorId == floorId)
+                    .ToListAsync();
+
+                if (rooms == null)
+                {
+                    return NotFound();
+                }
+
+                return rooms;
+            }
+            catch (Exception ex)
+            {
+                // Handle errors, e.g., return a 500 Internal Server Error
+                return StatusCode(500, "An error occurred while fetching rooms by floor.");
+            }
+        }
+
     }
 }

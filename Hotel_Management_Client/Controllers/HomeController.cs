@@ -1,21 +1,48 @@
 ﻿using Hotel_Management_Client.Models;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 using System.Diagnostics;
+
 
 namespace Hotel_Management_Client.Controllers
 {
     public class HomeController : Controller
-    {
-        private readonly ILogger<HomeController> _logger;
+    { 
+        private readonly HttpClient _client;
 
-        public HomeController(ILogger<HomeController> logger)
+        public HomeController()
         {
-            _logger = logger;
+            _client = new HttpClient();
         }
 
-        public IActionResult Index()
+        [HttpGet]
+        public async Task<IActionResult> Index()
         {
-            return View();
+            // Fetch the list of floors from the API
+            HttpResponseMessage floorsResponse = await _client.GetAsync("https://localhost:7083/api/Floors");
+
+            if (floorsResponse.IsSuccessStatusCode)
+            {
+                var floorsJson = await floorsResponse.Content.ReadAsStringAsync();
+                var floors = JsonConvert.DeserializeObject<List<HomeViewModel.FloorViewModel>>(floorsJson);
+
+                // Fetch the list of rooms for each floor
+                foreach (var floor in floors)
+                {
+                    HttpResponseMessage roomsResponse = await _client.GetAsync($"https://localhost:7083/api/Rooms/ByFloor/{floor.FloorId}");
+                    if (roomsResponse.IsSuccessStatusCode)
+                    {
+                        var roomsJson = await roomsResponse.Content.ReadAsStringAsync();
+                        floor.Rooms = JsonConvert.DeserializeObject<List<HomeViewModel.RoomViewModel>>(roomsJson);
+                    }
+                }
+
+                return View(floors);
+            }
+
+            // Handle the case where the API request was not successful
+            return View("Error");
+
         }
 
         public IActionResult Privacy()

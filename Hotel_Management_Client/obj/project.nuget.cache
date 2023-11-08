@@ -1,8 +1,10 @@
 {
   "version": 2,
-  "dgSpecHash": "nkBt1ZRPl4LGa7k3JXbs5sRULFT5uSfBlY0FdoKfVxfu9OwwL+X0dlhPAZ7k72BWHx0sV0X3lZfhtmK8a9pNxQ==",
+  "dgSpecHash": "gXGAnvsmfIBJEsQALgSTOXDxrUNcUOjjpaY5cV55RMZb0anY5yQh6dpnfWYgWaSMb4XeHCj1bs7VnlLk4pMyXA==",
   "success": true,
-  "projectFilePath": "F:\\Ky8\\PRN231\\PRN_Project\\SE1623_Group3_Project_HotelManagement\\Hotel_Management_Client\\Hotel_Management_Client.csproj",
-  "expectedPackageFiles": [],
+  "projectFilePath": "C:\\Users\\Lenovo\\Documents\\SE1623_Group3_Project_HotelManagement\\Hotel_Management_Client\\Hotel_Management_Client.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\Lenovo\\.nuget\\packages\\newtonsoft.json\\13.0.3\\newtonsoft.json.13.0.3.nupkg.sha512"
+  ],
   "logs": []
 }
